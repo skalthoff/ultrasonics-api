@@ -1,0 +1,42 @@
+version: "3.7"
+services:
+  ultrasonics-api:
+    image: xdgfx/ultrasonics-api
+    container_name: ultrasonics-api
+    restart: unless-stopped
+    platform: linux/amd64
+
+    ports:
+      - 8003:8003
+
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+
+      - SPOTIFY_CLIENT_ID=84dc513e60e347d58fb8a39ba76cc5b7
+      - SPOTIFY_CLIENT_SECRET=f2eeae9189cf46e8a589f5f02d9bac76
+      - SPOTIFY_REDIRECT_URI=http://localhost:8003/api/spotify/auth
+
+      - LASTFM_API_KEY=xyz
+
+      - DEEZER_APP_ID=abc
+      - DEEZER_APP_SECRET=xyz
+      - DEEZER_REDIRECT_URI=https://ultrasonics-api.herokuapp.com/api/deezer/auth
+
+
+  ultrasonics:
+    platform: linux/amd64
+    image: xdgfx/ultrasonics
+    container_name: ultrasonics
+    restart: unless-stopped
+
+    ports:
+      - 5000:5000
+
+    volumes:
+      - /Users/skalthoff/tempworkspace/ultrasonics-api/fullstack/configs:/config
+      - /Users/skalthoff/tempworkspace/ultrasonics-api/fullstack/plugins:/plugins  # Used for third-party plugins
+
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
